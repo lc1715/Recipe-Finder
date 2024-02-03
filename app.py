@@ -201,6 +201,56 @@ def get_recipe_info(recipe_id):
     return render_template('recipes/recipes_info.html', data=data)
 
 
+@app.route('/save_recipe/<int:recipe_id>')
+def save_recipe(recipe_id):
+    """Add recipe to database"""
+
+    if g.user:
+
+        recipe = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
+
+        if recipe in g.user.saved_recipes:
+            flash('You already saved that recipe', 'danger')
+            # return redirect('/')
+
+        else:
+
+            resp = requests.get(f'{API_BASE_URL}/{recipe_id}/information',
+                            params={'apiKey': API_SECRET_KEY})
+        
+            data = resp.json()
+
+            image = f"https://spoonacular.com/recipeImages/{recipe_id}-312x231.jpg"
+
+            save_recipe = Saved_Recipe(user_id=g.user.id, recipe_id=recipe_id, title=data['title'], image_url=image) 
+            db.session.add(save_recipe)
+            db.session.commit()
+            return redirect('/users_recipes')
+    else:
+        flash('Sign up or log in to save recipes')
+
+
+@app.route('/users_recipes')
+def users_recipes():
+
+    users_recipes = g.user.saved_recipes
+
+    recipe_ids = [ recipe.recipe_id for recipe in users_recipes]
+    
+    return render_template('recipes/users_recipes.html', users_recipes=users_recipes, recipe_ids=recipe_ids)
+
+
+@app.route('/delete_recipe/<int:recipe_id>')
+def delete_saved_recipe(recipe_id):
+    """To delete a user's saved recipe"""
+    
+    recipe = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
+ 
+    db.session.delete(recipe)
+    db.session.commit()
+    return redirect('/users_recipes')
+
+
 
 
 
