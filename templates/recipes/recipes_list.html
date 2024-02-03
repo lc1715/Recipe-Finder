@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="POST">
+
+    <h5 class="display-5 text-center">Recipes</h5>
+
+    <div class="container">
+        <div class="row">
+
+            {% for recipe in data.results %}
+            <div class="col-md-4 img-div">
+
+                <a href="/recipe/{{recipe.id}}">
+                    <div class="img-div">
+                        <img src="{{recipe.image}}" alt="">
+                        <a href="/save_recipe/{{recipe.id}}" class="btn btn-sm btn-info star">
+                            <i class="fa-solid fa-star"></i>
+                        </a>
+                    </div>
+                    <p>{{recipe.title}}</p>
+                </a>
+
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</form>
+
+{% endblock %}

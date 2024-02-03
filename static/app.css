@@ -1,0 +1,11 @@
+/* To put the star button inside of the recipe image */
+.star {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+}
+
+.img-div {
+    position: relative;
+    display: inline-block;
+}

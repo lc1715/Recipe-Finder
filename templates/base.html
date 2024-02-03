@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/app.css">
+
+    <script src="https://kit.fontawesome.com/e98fb4f182.js" crossorigin="anonymous"></script>
+
+    <link href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+
+    <title>Recipes</title>
+</head>
+
+<body>
+
+    <nav>Recipe Finder
+        {% if g.user%}
+        <a href="/">Home</a>
+        <a href="/users_recipes">Saved Recipes</a>
+        <a href="/edit_profile">Update Profile</a>
+        <a href="/recipes_form">Recipe Form</a>
+        <a href="/logout">Log Out</a>
+        {% else %}
+        <a href="/">Home</a>
+        <a href="/recipes_form">Recipe Form</a>
+        <a href="/signup">Sign Up</a>
+        <a href="/login">Log In</a>
+        {% endif %}
+    </nav>
+
+
+    <div class="container" style="margin-top: 2em">
+
+        {% for category, msg in get_flashed_messages(with_categories=True)%}
+        <div class="alert alert-{{category}}"> {{msg}} </div>
+        {% endfor %}
+
+    </div>
+
+    <script src="/static/app.js"></script>
+
+    {% block content %} {% endblock %}
+
+</body>
+
+</html>

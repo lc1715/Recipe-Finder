@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-6">
+            <h3>{{data.title}}</h3>
+
+            <h6>Ingredients:</h6>
+            {% for ingredient in data.extendedIngredients%}
+            <ul>
+                <li>{{ingredient.original}}</li>
+            </ul>
+            {% endfor %}
+
+            <h6>Instructions:</h6>
+            {% for instruction_step in data.analyzedInstructions[0].steps %}
+            <ol>
+                {{instruction_step.number}}. {{instruction_step.step}}
+            </ol>
+            {% endfor %}
+        </div>
+
+        <div class="col-6">
+            <img src="{{data.image}}" alt="">
+
+            <div>Ready In: {{data.readyInMinutes}}mins</div>
+
+            <div>Servings: {{data.servings}}</div>
+
+            <div>
+                <a href="{{data.sourceUrl}}">Source Link</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

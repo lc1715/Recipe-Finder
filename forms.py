@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, EmailField, SelectField, SelectMultipleField
+from wtforms import StringField, PasswordField, EmailField, SelectField, SelectMultipleField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email
 
 
-diets = ['Gluten Free', 'Ketogenic', 'Vegetarian', 'Lacto-Vegetarian', 
+diets = ['None', 'Gluten Free', 'Ketogenic', 'Vegetarian', 'Lacto-Vegetarian', 
         'Ovo-Vegetarian', 'Vegan', 'Pescatarian', 'Paleo', 'Primal',
         'Low FODMAP', 'Whole30']
 
@@ -56,5 +56,10 @@ class RecipeForm(FlaskForm):
     exclude_ingredients = StringField('Ingredients to Exclude (e.g. poppyseed, onions, etc.)')
     food_type = StringField('Type of Food (e.g. pasta, chicken, fish, etc.)')
     meal_type = SelectMultipleField('Meal Type', choices =[(meal_type, meal_type) for meal_type in meal_types])
-    equipment = SelectField('Slow Cooker or Instant Pot', choices = [('Slow Coooker', 'Slow Cooker'), ('Instant Pot', 'Instant Pot')])
+    equipment = SelectField('Slow Cooker or Instant Pot', choices = [('None', 'None'), ('Slow Coooker', 'Slow Cooker'), ('Instant Pot', 'Instant Pot')])
 
+
+class NotesForm(FlaskForm):
+    """Add notes to saved recipes"""
+
+    notes = TextAreaField('Notes')

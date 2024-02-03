@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<!-- JQuery and CSS allows for checkbox -->
+<style>
+    select {
+        width: 30%;
+    }
+</style>
+
+<script>
+    $(function () {
+        $('select').multipleSelect({
+            multiple: true,
+            multipleWidth: 150
+        })
+    })
+</script>
+
+
+<div class="row justify-content-md-center">
+    <div class="col-md-7 col-lg-5">
+
+        <h2 class="join-message">User Profile</h2>
+        <h6>Fill out the form below to update your profile:
+        </h6>
+
+        <form method="POST">
+
+            {{form.hidden_tag()}}
+
+            {% if form.username.errors %}
+
+            {{form.username.label(class_='text-success')}}
+
+            {% for error in form.username.errors %}
+            <span class="text-danger">{{error}}</span>
+            {% endfor %}
+
+            {{form.username(class_="form-control")}}
+
+            {% else %}
+            {{form.username.label(class_='text-success')}}
+            {{form.username(class_="form-control")}}
+
+            {% endif %}
+
+
+            {% if form.email.errors %}
+
+            {{form.email.label(class_='text-success mt-3')}}
+
+            {% for error in form.email.errors %}
+            <span class="text-danger">{{error}}</span>
+            {% endfor %}
+
+            {{form.email(class_="form-control")}}
+
+            {% else %}
+            {{form.email.label(class_='text-success mt-3')}}
+            {{form.email(class_="form-control")}}
+
+            {% endif %}
+
+
+            {{form.diet.label(class_='text-success mt-3 label')}}
+            <div>
+                {{form.diet(class_='select hello', style='width:550px')}}
+            </div>
+
+
+            {{form.intolerances.label(class_='text-success mt-3')}}
+            <div>
+                {{form.intolerances(class_='select hello', style='width:550px')}}
+            </div>
+
+
+            {{form.exclude_ingredients.label(class_='text-success mt-3')}}
+            {{form.exclude_ingredients(class_="form-control")}}
+
+
+            {% if form.password.errors %}
+
+            {{form.password.label(class_='text-success mt-3')}}
+
+            {% for error in form.password.errors%}
+            <span class="text-danger">{{error}}</span>
+            {%endfor%}
+
+            {{form.password(class_="form-control")}}
+
+            {% else %}
+            {{form.password.label(class_='text-success mt-3')}}
+            {{form.password(class_="form-control")}}
+
+            {% endif %}
+
+            <button class="btn-sm btn-info mt-3">Save Changes</button>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}
