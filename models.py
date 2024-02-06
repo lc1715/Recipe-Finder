@@ -74,9 +74,21 @@ class Saved_Recipe(db.Model):
 
     __tablename__ = 'saved_recipes'
 
-    id = db.Column(db.Integer, primary_key=True)
+    __table_args__ = (db.UniqueConstraint('user_id', 'recipe_id'),)
+
+    recipe_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
-    recipe_id = db.Column(db.Integer, nullable=False)
     title = db.Column(db.Text)
     image_url = db.Column(db.Text)
-    notes = db.Column(db.Text)
+    notes = db.relationship('Note', backref='recipe')
+
+
+class Note(db.Model):
+    """User's notes for a recipe"""
+
+    __tablename__ = 'notes'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
+    recipe_id = db.Column(db.Integer, db.ForeignKey('saved_recipes.recipe_id', ondelete='CASCADE'))
+    text = db.Column(db.Text, nullable=False)

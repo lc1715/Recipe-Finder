@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form>
+
+    <h5 class="display-5 text-center">Recipes</h5>
+
+    <div class="container">
+        <div class="row">
+
+            {% for recipe in users_recipes %}
+            <div class="col-md-4 img-div">
+
+                <a href="/recipe/{{recipe.recipe_id}}">
+                    <div class="img-div">
+                        <img src="{{recipe.image_url}}" alt="">
+                        <a href="/delete_recipe/{{recipe.recipe_id}}" class="btn btn-sm btn-success star">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </a>
+                    </div>
+                    <p>{{recipe.title}}</p>
+                </a>
+
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}

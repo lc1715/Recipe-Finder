@@ -6,7 +6,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from secret_keys import FLASK_SECRET_KEY, API_SECRET_KEY
 from forms import SignupForm, LoginForm, EditProfileForm, RecipeForm
-from models import db, connect_db, User, Saved_Recipe
+from models import db, connect_db, User, Saved_Recipe, Note
 
 app = Flask(__name__)
 
@@ -249,6 +249,40 @@ def delete_saved_recipe(recipe_id):
     db.session.delete(recipe)
     db.session.commit()
     return redirect('/users_recipes')
+
+
+###########################################################
+#Notes Routes:
+
+@app.route('/save_notes/<int:recipe_id>', methods=['POST'])
+def save_notes(recipe_id):
+
+    note = request.form['notes']
+
+    save_note = Note(user_id=g.user.id, recipe_id=recipe_id, text=note)
+  
+    db.session.add(save_note)
+    db.session.commit()
+
+    return redirect(f'/recipe/{recipe_id}')
+
+
+@app.route('/edit_notes/<int:recipe_id>')
+def edit_notes(recipe_id):
+
+    notes = Note.query.filter(Note.recipe_id==recipe_id).all()
+    
+    return render_template('notes/notes.html', notes=notes, recipe_id=recipe_id)
+
+
+@app.route('/delete_note/<int:note_id>/<int:recipe_id>')
+def delete_note(note_id, recipe_id):
+
+    note = Note.query.get(note_id)
+
+    db.session.delete(note)
+    db.session.commit()
+    return redirect(f'/edit_notes/{recipe_id}')
 
 
 
