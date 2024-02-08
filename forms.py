@@ -10,10 +10,6 @@ diets = ['None', 'Gluten Free', 'Ketogenic', 'Vegetarian', 'Lacto-Vegetarian',
 intolerances = ['Dairy', 'Egg', 'Gluten', 'Grain', 'Peanut', 'Seafood',
                 'Sesame', 'Shellfish', 'Soy', 'Sulfite', 'Tree Nut', 'Wheat']
 
-meal_types = ['main course', 'side dish', 'dessert', 'appetizer', 'salad',
-              'bread', 'breakfast', 'soup', 'beverage', 'sauce', 'marinade',
-              'fingerfood', 'snack', 'drink']
-
 
 
 class SignupForm(FlaskForm):
@@ -51,6 +47,5 @@ class RecipeForm(FlaskForm):
     diet = SelectField('Diet', choices = [(diet, diet) for diet in diets])
     intolerances = SelectMultipleField('Food Allergies/Intolerances', choices=[(intolerance, intolerance) for intolerance in intolerances])
     exclude_ingredients = StringField('Ingredients to Exclude (e.g. poppyseed, onions, etc.)')
-    food_type = StringField('Type of Food (e.g. pasta, chicken, fish, etc.)')
-    meal_type = SelectMultipleField('Meal Type', choices =[(meal_type, meal_type) for meal_type in meal_types])
+    food_type = StringField('Food Type and/or Meal Type (e.g. pasta, chicken, salad, dinner, etc.)')
     num_of_recipes = IntegerField('Number of recipes:', validators=[NumberRange(min=0, max=100), Optional()])

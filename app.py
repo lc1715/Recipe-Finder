@@ -205,15 +205,19 @@ def recipes_form():
             intolerances = form.intolerances.data
             exclude_ingredients = form.exclude_ingredients.data
             food_type = form.food_type.data
-            meal_type = form.meal_type.data
             num_of_recipes = form.num_of_recipes.data
 
             # Get random recipes:
-            if diet == 'None' and intolerances == [] and exclude_ingredients == '' and food_type == '' and meal_type == []:
+            if diet == 'None' and intolerances == [] and exclude_ingredients == '' and food_type == '':
                 resp = requests.get(f'{API_BASE_URL}/random', 
                                    params ={'apiKey': API_SECRET_KEY, 'number':9})
                 
                 data = resp.json()
+
+                # Maximum API calls have been reached
+                if 'code' in data:
+                    flash('Please try searching for recipes tomorrow!', 'danger')
+                    return redirect('/')
                 
                 if g.user:
                     # Get all recipe ids in user's saved recipes to change star btn color
@@ -228,9 +232,14 @@ def recipes_form():
                 resp = requests.get(f'{API_BASE_URL}/complexSearch', 
                             params = {'apiKey': API_SECRET_KEY, 'diet': diet, 'intolerances': intolerances, 
                                     'excludeIngredients': exclude_ingredients, 'query':food_type,
-                                        'type': meal_type, 'number': num_of_recipes})
+                                        'number': num_of_recipes})
 
                 data = resp.json()
+
+                # Maximum API calls have been reached
+                if 'code' in data:
+                    flash('Please try searching for recipes tomorrow!', 'danger')
+                    return redirect('/')
                 
                 if data['results'] == []:
                     flash('No recipes found with those selections', 'danger')
