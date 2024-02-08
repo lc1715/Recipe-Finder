@@ -4,12 +4,12 @@
 
 <form method="POST">
 
-    <h5 class="display-5 text-center">Recipes</h5>
+    <h5 class="display-5 text-center">Random Recipes</h5>
 
     <div class="container">
         <div class="row">
 
-            {% for recipe in data.results %}
+            {% for recipe in data.recipes %}
             <div class="col-md-4 img-div">
 
                 <a href="/recipe/{{recipe.id}}">
@@ -24,11 +24,10 @@
                 </a>
 
             </div>
-            {% endfor %}
 
+            {% endfor %}
         </div>
     </div>
-
 </form>
 
 {% endblock %}

@@ -3,7 +3,7 @@
 {% block content %}
 
 
-<!-- JQuery and CSS allows for checkbox -->
+<!-- Using JQuery and CSS to create checkboxes -->
 <style>
     select {
         width: 30%;
@@ -27,7 +27,7 @@
         <h6>Fill out the form below to update your profile:
         </h6>
 
-        <form method="POST">
+        <form action="/edit_profile" method="POST">
 
             {{form.hidden_tag()}}
 
@@ -97,7 +97,12 @@
 
             {% endif %}
 
-            <button class="btn-sm btn-info mt-3">Save Changes</button>
+            <button class="btn btn-sm btn-info mt-3">Save Changes</button>
+
+            <a href="/recipes_form" class="btn btn-sm btn-info mt-3">Cancel</a>
+
+            <button formaction="/delete_user" formmethod="POST" class="btn btn-sm btn-primary mt-3">Delete
+                Profile</button>
 
         </form>
     </div>

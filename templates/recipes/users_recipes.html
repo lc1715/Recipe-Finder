@@ -4,6 +4,7 @@
 
 <form>
 
+    {% if users_recipes | length > 0 %}
     <h5 class="display-5 text-center">Recipes</h5>
 
     <div class="container">
@@ -15,18 +16,21 @@
                 <a href="/recipe/{{recipe.recipe_id}}">
                     <div class="img-div">
                         <img src="{{recipe.image_url}}" alt="">
-                        <a href="/delete_recipe/{{recipe.recipe_id}}" class="btn btn-sm btn-success star">
-                            <i class="fa-regular fa-trash-can"></i>
-                        </a>
+                        <form action="/delete_recipe/{{recipe.recipe_id}}" method="POST">
+                            <button class="btn btn-sm btn-success star">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </form>
                     </div>
                     <p>{{recipe.title}}</p>
                 </a>
 
             </div>
-
             {% endfor %}
+
         </div>
     </div>
+    {% endif %}
 
 </form>
 

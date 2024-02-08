@@ -2,20 +2,28 @@
 
 {% block content %}
 
-<h3>Delete Recipe Notes</h3>
-<ul>
-    {% if notes | length > 0 %}
-    {% for note in notes%}
-    <li>
-        {{note.text}}
-        <a href="/delete_note/{{note.id}}/{{recipe_id}}" class="btn-sm btn-info d-note">
-            <i class="fa-regular fa-trash-can"></i>
-        </a>
-    </li>
-    {% endfor %}
-    {% endif %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <h3>Delete Recipe Notes</h3>
+            <ul>
+                {% if notes | length > 0 %}
+                {% for note in notes%}
+                <li>
+                    {{note.text}}
+                    <form action="/delete_note/{{note.id}}/{{recipe_id}}" method="POST">
+                        <button class="btn-sm btn-info">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </form>
+                </li>
+                {% endfor %}
+                {% endif %}
 
-    <a href="/recipe/{{recipe_id}}">Return to my recipe</a>
-</ul>
+                <a href=" /recipe/{{recipe_id}}">Return to my recipe</a>
+            </ul>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

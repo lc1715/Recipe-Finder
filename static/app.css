@@ -9,3 +9,8 @@
     position: relative;
     display: inline-block;
 }
+
+
+.recipe-img {
+    max-width: 15rem;
+}

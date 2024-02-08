@@ -11,26 +11,24 @@ def connect_db(app):
     db.init_app(app)
 
 
-
 class User(db.Model):
     """To create a user in the system."""
 
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
     diet = db.Column(db.Text, default=None)
     intolerances = db.Column(db.Text, default=None)
     exclude_ingredients = db.Column(db.Text, default=None)
-    saved_recipes = db.relationship('Saved_Recipe', backref='user')
-
+    saved_recipes = db.relationship('Saved_Recipe', backref='user', cascade="all, delete-orphan")
+    users_notes = db.relationship('Note', backref='user', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<user_obj: id={self.id}, username={self.username}, email={self.email}>"
-    
-    
+
     @classmethod
     def signup(cls, username, email, password, diet, intolerances, exclude_ingredients):
         """To sign up a user, hash the password, and return the user object."""
@@ -74,13 +72,13 @@ class Saved_Recipe(db.Model):
 
     __tablename__ = 'saved_recipes'
 
-    __table_args__ = (db.UniqueConstraint('user_id', 'recipe_id'),)
+    __table_args__ = (db.UniqueConstraint('recipe_id', 'user_id'),)
 
     recipe_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
     title = db.Column(db.Text)
     image_url = db.Column(db.Text)
-    notes = db.relationship('Note', backref='recipe')
+    notes = db.relationship('Note', backref='recipe', cascade="all, delete-orphan")
 
 
 class Note(db.Model):
@@ -92,3 +90,7 @@ class Note(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('saved_recipes.recipe_id', ondelete='CASCADE'))
     text = db.Column(db.Text, nullable=False)
+
+   
+
+    

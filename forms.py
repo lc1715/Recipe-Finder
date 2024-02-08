@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, EmailField, SelectField, SelectMultipleField, TextAreaField
-from wtforms.validators import DataRequired, Length, Email
+from wtforms import StringField, PasswordField, EmailField, SelectField, SelectMultipleField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, NumberRange, Optional
 
 
 diets = ['None', 'Gluten Free', 'Ketogenic', 'Vegetarian', 'Lacto-Vegetarian', 
@@ -25,15 +25,13 @@ class SignupForm(FlaskForm):
     diet = SelectField('Diet (Optional)', choices = [(diet, diet) for diet in diets])
     intolerances = SelectMultipleField('Allergies/Intolerances (Optional)', choices=[(intolerance, intolerance) for intolerance in intolerances])
     exclude_ingredients = StringField('Ingredients to Exclude (Optional)')
-
-
+   
 
 class LoginForm(FlaskForm):
     """Form to log in a user"""
 
     username = StringField('Username', validators=[DataRequired(), Length(max=20)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
-
 
 
 class EditProfileForm(FlaskForm):
@@ -47,19 +45,12 @@ class EditProfileForm(FlaskForm):
     exclude_ingredients = StringField('Ingredients to Exclude (Optional)')
 
 
-
 class RecipeForm(FlaskForm):
-    """Form for a user to optionally filter out recipes"""
+    """Form for a user to filter out recipes"""
 
     diet = SelectField('Diet', choices = [(diet, diet) for diet in diets])
     intolerances = SelectMultipleField('Food Allergies/Intolerances', choices=[(intolerance, intolerance) for intolerance in intolerances])
     exclude_ingredients = StringField('Ingredients to Exclude (e.g. poppyseed, onions, etc.)')
     food_type = StringField('Type of Food (e.g. pasta, chicken, fish, etc.)')
     meal_type = SelectMultipleField('Meal Type', choices =[(meal_type, meal_type) for meal_type in meal_types])
-    equipment = SelectField('Slow Cooker or Instant Pot', choices = [('None', 'None'), ('Slow Coooker', 'Slow Cooker'), ('Instant Pot', 'Instant Pot')])
-
-
-class NotesForm(FlaskForm):
-    """Add notes to saved recipes"""
-
-    notes = TextAreaField('Notes')
+    num_of_recipes = IntegerField('Number of recipes:', validators=[NumberRange(min=0, max=100), Optional()])
