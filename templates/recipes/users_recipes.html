@@ -16,7 +16,7 @@
                 <a href="/recipe/{{recipe.recipe_id}}">
                     <div class="img-div">
                         <img src="{{recipe.image_url}}" alt="">
-                        <form action="/delete_recipe/{{recipe.recipe_id}}" method="POST">
+                        <form action="/delete_recipe/{{recipe.recipe_id}}/{{recipe.user_id}}" method="POST">
                             <button class="btn btn-sm btn-success star">
                                 <i class="fa-regular fa-trash-can"></i>
                             </button>

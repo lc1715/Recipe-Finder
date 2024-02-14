@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, EmailField, SelectField, SelectMultipleField, IntegerField
+from wtforms import StringField, PasswordField, EmailField, SelectField, SelectMultipleField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, NumberRange, Optional
 
 
@@ -49,3 +49,9 @@ class RecipeForm(FlaskForm):
     exclude_ingredients = StringField('Ingredients to Exclude (e.g. poppyseed, onions, etc.)')
     food_type = StringField('Food Type and/or Meal Type (e.g. pasta, chicken, salad, dinner, etc.)')
     num_of_recipes = IntegerField('Number of recipes:', validators=[NumberRange(min=0, max=100), Optional()])
+
+
+class NoteForm(FlaskForm):
+    """Add notes to saved recipes"""
+
+    note = TextAreaField('Recipe Notes')

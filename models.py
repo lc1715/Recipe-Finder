@@ -74,11 +74,12 @@ class Saved_Recipe(db.Model):
 
     __table_args__ = (db.UniqueConstraint('recipe_id', 'user_id'),)
 
-    recipe_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    recipe_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
     title = db.Column(db.Text)
     image_url = db.Column(db.Text)
-    notes = db.relationship('Note', backref='recipe', cascade="all, delete-orphan")
+    recipe_notes = db.relationship('Note', backref='recipe', cascade="all, delete-orphan")
 
 
 class Note(db.Model):
@@ -87,8 +88,9 @@ class Note(db.Model):
     __tablename__ = 'notes'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    saved_recipe_id = db.Column(db.Integer, db.ForeignKey('saved_recipes.id', ondelete='CASCADE'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
-    recipe_id = db.Column(db.Integer, db.ForeignKey('saved_recipes.recipe_id', ondelete='CASCADE'))
+    recipe_id = db.Column(db.Integer, nullable=False)
     text = db.Column(db.Text, nullable=False)
 
    

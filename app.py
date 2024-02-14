@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from secret_keys import FLASK_SECRET_KEY, API_SECRET_KEY
-from forms import SignupForm, LoginForm, EditProfileForm, RecipeForm
+from forms import SignupForm, LoginForm, EditProfileForm, RecipeForm, NoteForm
 from models import db, connect_db, User, Saved_Recipe, Note
 
 app = Flask(__name__)
@@ -129,6 +129,10 @@ def logout():
 def edit_user_profile():
     """Edit a user's profile"""
 
+    if not g.user:
+        flash('Access unauthorized', 'danger')
+        return redirect('/')
+
     form = EditProfileForm()
 
     if request.method == 'GET' and g.user:
@@ -139,23 +143,23 @@ def edit_user_profile():
         form.exclude_ingredients.data = g.user.exclude_ingredients
 
     if form.validate_on_submit():
-        username = form.username.data
-        email = form.email.data
-        password = form.password.data
-        diet = form.diet.data
-        intolerances= form.intolerances.data        
-        exclude_ingredients = form.exclude_ingredients.data
+        # username = form.username.data
+        # email = form.email.data
+        # password = form.password.data
+        # diet = form.diet.data
+        # intolerances= form.intolerances.data        
+        # exclude_ingredients = form.exclude_ingredients.data
 
-        user_obj = User.authenticate(g.user.username, password)
+        user_obj = User.authenticate(g.user.username, form.password.data)
 
         if user_obj:
 
             try:
-                user_obj.username = username
-                user_obj.email = email
-                user_obj.diet = diet
-                user_obj.intolerances = intolerances
-                user_obj.exclude_ingredients = exclude_ingredients
+                user_obj.username = form.username.data
+                user_obj.email = form.email.data
+                user_obj.diet = form.diet.data
+                user_obj.intolerances = form.intolerances.data
+                user_obj.exclude_ingredients = form.exclude_ingredients.data
 
                 db.session.add(user_obj)  
                 db.session.commit()
@@ -173,9 +177,13 @@ def edit_user_profile():
 def delete_user():
     """To delete a user"""
 
-    user = User.query.get(g.user.id)
+    if not g.user:
+        flash('Access Unauthorized', 'danger')
+        return redirect('/')
+    
+    do_logout()
 
-    db.session.delete(user)
+    db.session.delete(g.user)
     db.session.commit()
     flash('Your account has been deleted', 'danger')
     return redirect('/recipes_form')
@@ -241,7 +249,7 @@ def recipes_form():
                     flash('Please try searching for recipes tomorrow!', 'danger')
                     return redirect('/')
                 
-                if data['results'] == []:
+                elif data['results'] == []:
                     flash('No recipes found with those selections', 'danger')
                     return redirect('/recipes_form')
             
@@ -260,6 +268,8 @@ def recipes_form():
 def get_recipe_info(recipe_id):
     """To show more information about a recipe. If the recipe has been saved by a user,
     the user can save notes about the recipe."""
+
+    form = NoteForm()
     
     resp = requests.get(f'https://api.spoonacular.com/recipes/{recipe_id}/information',
                         params={'apiKey': API_SECRET_KEY})
@@ -267,11 +277,11 @@ def get_recipe_info(recipe_id):
     data = resp.json()
 
     if g.user:
-        notes = Note.query.filter(Note.recipe_id==recipe_id).all()   #[{Note1}, {Note2}]
-        recipe_ids = [recipe.recipe_id for recipe in g.user.saved_recipes]               #[{Recipe1}, {Recipe2}]
-        return render_template('recipes/recipes_info.html', data=data, recipe_id=recipe_id, notes=notes, recipe_ids=recipe_ids)
+        notes = Note.query.filter(Note.recipe_id==recipe_id).all()  
+        users_saved_recipe_ids = [recipe.recipe_id for recipe in g.user.saved_recipes]               #[{Recipe1}, {Recipe2}]
+        return render_template('recipes/recipes_info.html', form=form, data=data, recipe_id=recipe_id, notes=notes, users_saved_recipe_ids= users_saved_recipe_ids)
     else: 
-        return render_template('recipes/recipes_info.html', data=data, recipe_id=recipe_id)
+        return render_template('recipes/recipes_info.html', form=form, data=data, recipe_id=recipe_id)
 
     
 @app.route('/save_recipe/<int:recipe_id>')
@@ -305,6 +315,10 @@ def save_recipe(recipe_id):
 def users_recipes():
     """To show a user's saved recipes"""
 
+    if not g.user:
+        flash('Access Unauthorized', 'danger')
+        return redirect('/')
+
     users_recipes = g.user.saved_recipes
 
     recipe_ids = [ recipe.recipe_id for recipe in users_recipes]
@@ -315,19 +329,20 @@ def users_recipes():
     return render_template('recipes/users_recipes.html', users_recipes=users_recipes, recipe_ids=recipe_ids)
 
 
-@app.route('/delete_recipe/<int:recipe_id>', methods=['POST'])
-def delete_saved_recipe(recipe_id):
+@app.route('/delete_recipe/<int:recipe_id>/<int:user_id>', methods=['POST'])
+def delete_saved_recipe(recipe_id, user_id):
     """To delete a user's saved recipe"""
 
-    if g.user:
-        recipe = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
- 
-        db.session.delete(recipe)
-        db.session.commit()
-        flash('Your recipe has been deleted', 'danger')
-        return redirect('/users_recipes')
-    else:
+    if not g.user or g.user.id != user_id:
+        flash('Access Unauthorized', 'danger')
         return redirect('/')
+    
+    recipe = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
+ 
+    db.session.delete(recipe)
+    db.session.commit()
+    flash('Your recipe has been deleted', 'danger')
+    return redirect('/users_recipes')
 
 
 ###########################################################
@@ -337,29 +352,47 @@ def delete_saved_recipe(recipe_id):
 def save_notes(recipe_id):
     """To save a recipe note"""
 
-    note = request.form['notes']
+    if not g.user:
+        flash('Access unauthorized', 'danger')
+        return redirect('/')
+    
+    form = NoteForm()
 
-    save_note = Note(user_id=g.user.id, recipe_id=recipe_id, text=note)
+    if form.validate_on_submit():
+        
+        note = form.note.data
+
+        saved_recipe_obj = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
+
+        save_note = Note(saved_recipe_id=saved_recipe_obj.id, user_id=g.user.id, recipe_id=recipe_id, text=note)
   
-    db.session.add(save_note)
-    db.session.commit()
-
-    return redirect(f'/recipe/{recipe_id}')
+        db.session.add(save_note)
+        db.session.commit()
+    
+        return redirect(f'/recipe/{recipe_id}')
 
 
 @app.route('/edit_notes/<int:recipe_id>')
 def edit_notes(recipe_id):
     """Show all notes for a recipe and provide the option to delete a note"""
 
+    if not g.user:
+        flash('Access Unauthorized', 'danger')
+        return redirect('/')
+
     notes = Note.query.filter(Note.recipe_id==recipe_id).all()
 
     return render_template('notes/notes.html', notes=notes, recipe_id=recipe_id)
 
 
-@app.route('/delete_note/<int:note_id>/<int:recipe_id>', methods=['POST'])
-def delete_note(note_id, recipe_id):
+@app.route('/delete_note/<int:note_id>/<int:recipe_id>/<int:user_id>', methods=['POST'])
+def delete_note(note_id, recipe_id, user_id):
     """To delete a recipe note"""
 
+    if not g.user or g.user.id != user_id:
+        flash('Access Unauthorized', 'danger')
+        return redirect('/')
+    
     note = Note.query.get(note_id)
 
     db.session.delete(note)
