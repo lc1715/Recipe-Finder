@@ -2,26 +2,36 @@
 
 {% block content %}
 
+<h3 class="text-center">Delete Recipe Notes</h3>
+
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-4">
-            <h3>Delete Recipe Notes</h3>
-            <ul>
-                {% if notes | length > 0 %}
-                {% for note in notes%}
-                <li>
-                    {{note.text}}
-                    <form action="/delete_note/{{note.id}}/{{recipe_id}}" method="POST">
-                        <button class="btn-sm btn-info">
-                            <i class="fa-regular fa-trash-can"></i>
-                        </button>
-                    </form>
-                </li>
-                {% endfor %}
-                {% endif %}
+        <div class="card delete-recipe mt-2" style="width: 30rem;">
+            <img src="{{image_url}}" class="card-img-top delete-img " alt="Recipe Image">
+            <div class="card-body">
 
-                <a href=" /recipe/{{recipe_id}}">Return to my recipe</a>
-            </ul>
+                <h3 class="text-center">{{title}} </h3>
+                <ul class="mt-5">
+                    {% if notes | length > 0 %}
+                    {% for note in notes%}
+                    <li class="mb-4">
+                        <form action=" /delete_note/{{note.id}}/{{recipe_id}}/{{note.user_id}}" method="POST">
+                            {{note.text}}
+                            <button class="btn btn-sm btn-danger note-delete-btn">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+
+                        </form>
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                </ul>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a class="btn btn-md btn-success mt-5" href=" /recipe/{{recipe_id}}">Return to Recipe</a>
+                </div>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

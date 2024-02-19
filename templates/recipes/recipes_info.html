@@ -6,77 +6,73 @@
     <div class="row">
 
         <div class="col-6">
-            <h3>{{data.title}}</h3>
+            <h1 class="fw-semibold">{{data.title}}</h1>
 
-            <h6>Ingredients:</h6>
+            <h3 class="mt-4">Ingredients:</h3>
             {% for ingredient in data.extendedIngredients%}
             <ul>
                 <li>{{ingredient.original}}</li>
             </ul>
             {% endfor %}
 
-            {% if g.user%}
-            <h6>*For meal information and instructions, head over to <a href="{{data.sourceUrl}}">Source
-                    Link</a></h6>
-            {% endif %}
+            <h6 class="fw-semibold mt-4">*For meal information and instructions, head over to <a
+                    href="{{data.sourceUrl}}" target="_blank">Source Link</a>
+            </h6>
         </div>
 
-
         <div class="col-6">
-            <img src="{{data.image}}" alt="">
+            <img class="img-recipe-info" src="{{data.image}}" alt="">
 
-            <div>Ready In: {{data.readyInMinutes}}mins</div>
+            <div class="mt-2">Ready In: {{data.readyInMinutes}} mins</div>
 
-            <div>Servings: {{data.servings}}</div>
+            <div class="mt-2">Servings: {{data.servings}}</div>
 
-            {% if not g.user %}
-            <h6>*For meal information and instructions, head over to <a href="{{data.sourceUrl}}">Source
-                    Link</a></h6>
-            {% endif %}
-
-            {% if recipe_id in users_saved_recipe_ids %}
-            <form action="/save_notes/{{recipe_id}}" method="POST">
-
-                {{form.hidden_tag()}}
-
-                {% for field in form if field.widget.input_type != 'hidden' %}
-
-                <div class="text-center">
-                    {{field.label}}
-                </div>
-
-                <ul>
-                    {% if notes | length > 0 %}
-                    {% for note in notes%}
-                    <li>
-                        {{note.text}}
-                    </li>
-                    {% endfor %}
-                    {% endif %}
-                </ul>
-
-                {% for error in field.errors %}
-                <span class="text-danger">{{error}}</span>
-                {% endfor %}
-
-                {{field(class_='form-control')}}
-
-                {% endfor %}
-
-                <button class="btn-sm btn-info mt-2">Save Notes</button>
-                <a href="/edit_notes/{{recipe_id}}" class="btn-sm btn-info">Edit Notes</a>
-            </form>
-            {% endif %}
-
-            {% if recipe_id not in users_saved_recipe_ids %}
+            {% if recipe_id not in users_saved_recipe_ids%}
             <form>
-                <button formaction="/save_recipe/{{recipe_id}}" formmethod="POST" class="btn btn-md btn-info">
+                <button formaction="/save_recipe/{{recipe_id}}" formmethod="POST"
+                    class="btn btn-md btn-success save-recipe-btn mt-3">
                     Save Recipe
                 </button>
             </form>
             {% endif %}
 
-        </div>
-    </div>
+            {% if recipe_id in users_saved_recipe_ids %}
+            <div class="card recipe-info mt-5" style="width: 40rem;">
+                <div class="card-body">
 
-    {% endblock %}
+                    <form action="/save_notes/{{recipe_id}}" method="POST">
+
+                        {{form.hidden_tag()}}
+
+                        {% for field in form if field.widget.input_type != 'hidden' %}
+                        <div class="text-center">
+                            {{field.label(class_="text-decoration-underline fst-italic mb-3 fs-5")}}
+                        </div>
+
+                        <ul>
+                            {% if notes | length > 0 %}
+                            {% for note in notes%}
+                            <li>
+                                {{note.text}}
+                            </li>
+                            {% endfor %}
+                            {% endif %}
+                        </ul>
+
+                        {% for error in field.errors %}
+                        <span class="text-danger">{{error}}</span>
+                        {% endfor %}
+
+                        {{field(class_='form-control')}}
+                        {% endfor %}
+
+                        <button class="btn btn-sm btn-success mt-2">Save Notes</button>
+                        <a href="/edit_notes/{{recipe_id}}" class="btn btn-sm btn-success mt-2">Edit Notes</a>
+                    </form>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        {% endblock %}

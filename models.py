@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
+
 def connect_db(app):
     """Connects the database to Flask app when called."""
 
@@ -24,10 +25,12 @@ class User(db.Model):
     intolerances = db.Column(db.Text, default=None)
     exclude_ingredients = db.Column(db.Text, default=None)
     saved_recipes = db.relationship('Saved_Recipe', backref='user', cascade="all, delete-orphan")
-    users_notes = db.relationship('Note', backref='user', cascade="all, delete-orphan")
+    notes = db.relationship('Note', backref='user', cascade="all, delete-orphan")
+
 
     def __repr__(self):
         return f"<user_obj: id={self.id}, username={self.username}, email={self.email}>"
+    
 
     @classmethod
     def signup(cls, username, email, password, diet, intolerances, exclude_ingredients):

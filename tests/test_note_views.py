@@ -1,10 +1,6 @@
-# To run tests: FLASK_ENV=production python3 -m unittest tests/test_note_views.py
-
 import os
-
 from unittest import TestCase
-from models import db, connect_db, User, Saved_Recipe, Note
-
+from models import db, User, Saved_Recipe, Note
 
 os.environ['DATABASE_URL'] = "postgresql:///recipes_db-test"
 
@@ -23,8 +19,9 @@ class NoteViewTestCase(TestCase):
         
         self.client = app.test_client()
 
-        db.drop_all()
-        db.create_all()
+        User.query.delete()
+        Saved_Recipe.query.delete()
+        Note.query.delete()  
 
         #Add a user
         user = User.signup('testuser','test@email.com', 'testing123', 'Vegan', ['Dairy'], 'peanuts') 
@@ -76,11 +73,11 @@ class NoteViewTestCase(TestCase):
         resp = c.post('/delete_note/1/715446/9999', follow_redirects=True)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertIn('<h3>Delete Recipe Notes</h3>', str(resp.data))
+        self.assertIn('<h3 class="text-center">Delete Recipe Notes</h3>', str(resp.data))
 
 
     def test_other_user_delete_note(self):
-        """Test that when you're logged in, another user cannot delete your note"""
+        """Test that when logged in, another user cannot delete your note"""
 
         with self.client as c:
             with c.session_transaction() as session:
@@ -88,7 +85,7 @@ class NoteViewTestCase(TestCase):
 
         c.post(f'/save_notes/{self.recipe_id}', data={'note': 'Used 1 cup of sugar instead of 2 cups of sugar and it was sweet enough'},
                       follow_redirects=True)
-
+        
 
         another_user = User.signup('anotheruser', 'another@email.com', 'another123', 'Vegan', ['Dairy'], 'peanuts')
         db.session.commit()
@@ -98,15 +95,12 @@ class NoteViewTestCase(TestCase):
         with self.client as c:
             with c.session_transaction() as session:
                 session[CURR_USER_KEY_NAME] = 2222
-    
+                
 
         resp = c.post(f'/delete_note/1/715446/{self.user_id}', follow_redirects=True)
 
         self.assertEqual(resp.status_code, 200)
         self.assertIn('Access Unauthorized', str(resp.data))
-
-
-
 
 
         

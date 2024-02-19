@@ -3,29 +3,33 @@
 {% block content %}
 
 <form method="POST">
-
-    <h5 class="display-5 text-center">Random Recipes</h5>
-
+    <h5 class="recipe-list-title display-6 fw-semibold fst-italic font-style">Random Recipes:</h5>
     <div class="container">
         <div class="row">
 
             {% for recipe in data.recipes %}
-            <div class="col-md-4 img-div">
-
-                <a href="/recipe/{{recipe.id}}">
-                    <div class="img-div">
-                        <img src="{{recipe.image}}" alt="" class="recipe-img">
-                        <a href="/save_recipe/{{recipe.id}}"
-                            class="btn btn-sm star {{'btn-danger' if recipe.id in recipe_ids else 'btn-info'}}">
-                            <i class="fa-solid fa-star"></i>
+            <div class="card recipe-info border-light" style="width: 23rem;">
+                <div class="card-body">
+                    <div class="position-relative mb-3">
+                        <a href="/recipe/{{recipe.id}}" class="text-decoration-none">
+                            <div class="img-div">
+                                <img src="{{recipe.image}}" class="recipe-img card-img-top" alt="Recipe Image">
+                                {% if recipe.id not in recipe_ids%}
+                                <form>
+                                    <button formaction="/save_recipe/{{recipe.id}}" formmethod="POST"
+                                        class="btn btn-sm btn-success star">
+                                        <i class="fa-regular fa-star"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                            <p class="recipe-name fw-normal">{{recipe.title}}</p>
                         </a>
                     </div>
-                    <p>{{recipe.title}}</p>
-                </a>
-
+                </div>
             </div>
-
             {% endfor %}
+
         </div>
     </div>
 </form>

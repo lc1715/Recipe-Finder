@@ -1,9 +1,7 @@
-# To run these unittests: python3 -m unittest tests/test_user_model.py
-
 import os
 from unittest import TestCase
 
-from models import db, User
+from models import db, User, Saved_Recipe, Note
 from sqlalchemy.exc import IntegrityError
 
 os.environ['DATABASE_URL'] = "postgresql:///recipes_db-test"
@@ -16,10 +14,12 @@ db.create_all()
 class UserModelTestCase(TestCase):
     """Test User Model functionality"""
 
-    def setUp(self):        
-        """Empty out User table and create sample data"""
+    def setUp(self):      
+        """Empty tables and create sample data"""
 
-        User.query.delete()        
+        User.query.delete()
+        Saved_Recipe.query.delete()
+        Note.query.delete()       
 
         user = User(username='testuser', email='test@email.com', password='testuser123')  
         user.id = 9999
@@ -28,7 +28,7 @@ class UserModelTestCase(TestCase):
         db.session.commit()
 
         self.user_id = user.id 
-        self.user = user            
+        self.user = user        
 
     def tearDown(self):
         """Clear up any fouled transactions in session"""
@@ -45,7 +45,7 @@ class UserModelTestCase(TestCase):
         self.assertEqual(self.user.email, 'test@email.com')
         self.assertEqual(self.user.password, 'testuser123')
         self.assertEqual(len(self.user.saved_recipes), 0)
-        self.assertEqual(len(self.user.users_notes), 0)
+        self.assertEqual(len(self.user.notes), 0)
 
 
     def test_repr_method(self):
@@ -59,25 +59,26 @@ class UserModelTestCase(TestCase):
     def test_signup_method(self):
         """Test the signup method"""
 
-        user1 = User.signup('test1', 'test1@email.com', 'testing123', 'vegan', ['Dairy', 'Wheat'], None)
+        user1 = User.signup('test1', 'test1@email.com', 'testing123', 'vegan', '{dairy, wheat}', None)
+
         self.assertNotEqual(user1.password, 'testing123')
         self.assertTrue(user1.password.startswith('$2b$'))
         self.assertEqual(user1.username, 'test1')
         self.assertEqual(user1.diet, 'vegan')
-        self.assertEqual(user1.intolerances, ['Dairy', 'Wheat'])
+        self.assertEqual(user1.intolerances, '{dairy, wheat}')
 
 
     def test_duplicate_user_creation(self):
-        """Test user signup method with the same username, email and password"""
+        """Test signup method with the same username or email as another user"""
 
-        User.signup('test1', 'test1@email.com', 'testing123', 'vegan', ['Dairy', 'Wheat'], 'peanut')
+        User.signup('test1', 'test1@email.com', 'testing123', 'vegan', '{dairy, wheat}', 'peanut')
 
         with self.assertRaises(IntegrityError) as context:
             User.signup('test1', 
                         'test1@email.com', 
                         'testing123', 
                         'vegan', 
-                        ['Dairy', 'Wheat'], 
+                        '{dairy, wheat}', 
                         'peanut')
             db.session.commit()
 
@@ -96,7 +97,7 @@ class UserModelTestCase(TestCase):
 
 
     def test_authenticate_invalid_username(self):
-        """Test user provides incorrect username"""
+        """Test when a user provides an incorrect username"""
 
         user1 = User.signup('test1', 'test1@email.com', 'testing123', None, None, None)
 
@@ -107,7 +108,7 @@ class UserModelTestCase(TestCase):
         
 
     def test_authenticate_invalid_password(self):
-        """Test user provides incorrect password"""
+        """Test when a user provides an incorrect password"""
 
         user1 = User.signup('test1', 'test1@email.com', 'testing123', None, None, None)
 

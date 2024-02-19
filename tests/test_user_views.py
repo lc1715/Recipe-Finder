@@ -1,9 +1,7 @@
-# To run tests: FLASK_ENV=production python3 -m unittest tests/test_user_views.py
-
 import os
 from unittest import TestCase
 
-from models import db, connect_db, User, Saved_Recipe, Note
+from models import db, User, Saved_Recipe, Note
 
 os.environ['DATABASE_URL'] = "postgresql:///recipes_db-test"
 
@@ -12,7 +10,6 @@ from app import app, CURR_USER_KEY_NAME
 db.create_all()
 
 app.config['WTF_CSRF_ENABLED'] = False
-
 
 
 class UserViewTestCase(TestCase):
@@ -28,14 +25,13 @@ class UserViewTestCase(TestCase):
         Note.query.delete()
 
         user = User.signup('testuser', 'test@email.com', 'testing123', 'Vegan', ['Dairy', 'Gluten'], 'peanuts')
-  
+
         user.id = 9999
         
         db.session.commit()
 
         self.user_id = user.id
-        self.user = user            
-
+        self.user = user           
 
     def tearDown(self):
         """Clear up any fouled transactions"""
@@ -44,7 +40,7 @@ class UserViewTestCase(TestCase):
         
 
     def test_signup_show_recipe_form(self):
-        """Test that a user can sign up and see the recipe form"""
+        """Test that a user can sign up and view the recipe form"""
 
         with self.client as c:
             with c.session_transaction() as session:
@@ -54,29 +50,27 @@ class UserViewTestCase(TestCase):
                       follow_redirects=True)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertIn('<h2>Recipe Finder</h2>', str(resp.data))
+        self.assertIn('<h1 class="mb-4 mt-3 text-center">Recipe Filter</h1>', str(resp.data))
 
 
     def test_login_show_recipe_form(self):
-        """Test that a user can see the recipe form after log in"""
+        """Test that a user can log in and view the recipe form"""
 
         with self.client as c:
             with c.session_transaction() as sess:
                 sess[CURR_USER_KEY_NAME] = self.user_id
 
-
         resp = c.post('/login', data={'username': 'testuser', 'password': 'testing123' })
 
         self.assertEqual(resp.status_code, 302)
-        self.assertEqual(resp.location, '/recipes_form')
+        self.assertEqual(resp.location, '/recipes')
 
         resp = c.post('/login', data={'username': 'testuser', 'password': 'testing123'}, 
                       follow_redirects=True)
 
         self.assertEqual(resp.status_code, 200)
-
         html = resp.get_data(as_text=True)
-        self.assertIn('<h2>Recipe Finder</h2>', html)
+        self.assertIn('<h1 class="mb-4 mt-3 text-center">Recipe Filter</h1>', html)
 
 
     def test_edit_profile(self):
@@ -97,26 +91,25 @@ class UserViewTestCase(TestCase):
       
         self.assertEqual(resp.status_code, 200)
         html = resp.get_data(as_text=True)
-        self.assertIn('Your user profile has been updated', html)
-        self.assertIn('<h1>Welcome to Recipe Finder!</h1>', str(resp.data))
+        self.assertIn('Your user profile has been updated!', html)
+        self.assertIn('<h1 class="mb-4 mt-3 text-center">User Profile</h1>', str(resp.data))
     
 
-
-    def test_delete_user(self):
-        """Test that a user can be deleted"""
+    def test_delete_user_profile(self):
+        """Test that a user profile can be deleted"""
 
         with self.client as c:
             with c.session_transaction() as sess:
                 sess[CURR_USER_KEY_NAME] = self.user_id
 
-
         resp = c.post('/delete_user', follow_redirects=True)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertIn('Your account has been deleted', str(resp.data))
+        self.assertIn('Your profile has been deleted!', str(resp.data))
         html = resp.get_data(as_text=True)
-        self.assertIn('<h2>Recipe Finder</h2>', html)
-       
+        self.assertIn('<h1 class="mb-4 mt-3 text-center">Recipe Filter</h1>', html)
+
+
 
 
 

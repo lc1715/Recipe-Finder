@@ -2,30 +2,32 @@
 
 {% block content %}
 
-<div class="row justify-content-md-center">
-    <div class="col-md-7 col-lg-5">
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="card form" style="width: 37rem;">
+            <div class="card-body">
 
-        <h3>Log in to your account:</h3>
+                <h2>Log in to your account:</h2>
 
-        <form method="POST">
+                <form method="POST">
 
-            {{ form.hidden_tag()}}
+                    {{ form.hidden_tag()}}
 
-            {% for field in form if field.widget.input_type != 'hidden' %}
+                    {% for field in form if field.widget.input_type != 'hidden' %}
+                    {{field.label(class_="label-font mt-2")}}
 
-            {{field.label}}
+                    {% for error in field.errors %}
+                    <span class="text-danger">- {{error}}</span>
+                    {% endfor %}
 
-            {% for error in field.errors %}
-            <span class="text-danger">({{error}})</span>
-            {% endfor %}
+                    {{field(class_='form-control mb-2')}}
+                    {% endfor %}
 
-            {{field(class_='form-control')}}
-
-            {% endfor %}
-
-            <button class="btn-info mt-3">Log In</button>
+                    <button class="btn btn-md btn-warning mt-3">Log In</button>
+                </form>
+            </div>
+        </div>
     </div>
-    </form>
 </div>
-</div>
+
 {% endblock %}

@@ -32,13 +32,13 @@ API_BASE_URL = 'https://api.spoonacular.com/recipes'
 
 
 ##############################################################################
-# User signup/login/logout
+# Helper functions
 
 @app.before_request
 def add_user_to_g():
-    """If user is logged in, add current user as Flask global variable."""
+    """If we're logged in, add current user to Flask global."""
 
-    if CURR_USER_KEY_NAME in session:      
+    if CURR_USER_KEY_NAME in session:     
         g.user = User.query.get(session[CURR_USER_KEY_NAME])
 
     else:
@@ -58,27 +58,27 @@ def do_logout():
         del session[CURR_USER_KEY_NAME]
 
 
-@app.route('/')
-def homepage():
-    """Go to homepage"""
 
-    return render_template('homepage.html')
-
+####################################################################
+#User routes:
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    """Sign up a user and create an account"""
+    """Sign up a user and create a user profile"""
 
     form = SignupForm()
+
+    if g.user:
+        return redirect('/recipes')
     
-    if form.validate_on_submit():       
+    if form.validate_on_submit():
+        
         username = form.username.data
         email = form.email.data
         password = form.password.data
         diet = form.diet.data
         intolerances= form.intolerances.data
         exclude_ingredients = form.exclude_ingredients.data
-
         try:
             user_obj = User.signup(username, email, password, diet, intolerances, exclude_ingredients)
             db.session.commit() 
@@ -87,10 +87,8 @@ def signup():
             return render_template('/users/signup.html', form=form)
         
         do_login(user_obj)
-
-        flash(f'Welcome, {user_obj.username}!', 'danger')
-
-        return redirect('/recipes_form')  
+        flash(f'Welcome, {user_obj.username}!', 'success')
+        return redirect('/recipes')   
     else:
         return render_template('/users/signup.html', form=form)
 
@@ -105,23 +103,23 @@ def login():
         username = form.username.data
         password = form.password.data
   
-        resp = User.authenticate(username, password)
+        user_obj = User.authenticate(username, password)
 
-        if resp:
-            do_login(resp)
-            return redirect('/recipes_form')
-   
-        flash('Your username or password is incorrect. Please try again', 'danger')
+        if user_obj:
+            do_login(user_obj)
+            return redirect('/recipes')
         
-    return render_template('/users/login.html', form=form)
+        flash('Your username or password is incorrect. Please try again.', 'danger')
 
+    return render_template('/users/login.html', form=form)
+    
 
 @app.route('/logout', methods=['POST'])
 def logout():
     """Log out user"""
 
     do_logout()
-    flash('You are logged out', 'primary')
+    flash('You are logged out', 'success')
     return redirect('/')
 
 
@@ -143,33 +141,25 @@ def edit_user_profile():
         form.exclude_ingredients.data = g.user.exclude_ingredients
 
     if form.validate_on_submit():
-        # username = form.username.data
-        # email = form.email.data
-        # password = form.password.data
-        # diet = form.diet.data
-        # intolerances= form.intolerances.data        
-        # exclude_ingredients = form.exclude_ingredients.data
-
         user_obj = User.authenticate(g.user.username, form.password.data)
 
         if user_obj:
-
             try:
                 user_obj.username = form.username.data
                 user_obj.email = form.email.data
                 user_obj.diet = form.diet.data
                 user_obj.intolerances = form.intolerances.data
                 user_obj.exclude_ingredients = form.exclude_ingredients.data
-
                 db.session.add(user_obj)  
                 db.session.commit()
             except IntegrityError():
                 flash('Username or email is already taken', 'danger')
                 return render_template('/users/edit_profile.html', form=form)
-            flash('Your user profile has been updated', 'danger')
-            return redirect('/')
+            flash('Your user profile has been updated!', 'success')
+            return redirect('/edit_profile')
         else:
-            flash('Your username or password is incorrect', 'danger')
+            flash('Your password is incorrect', 'danger')
+
     return render_template('/users/edit_profile.html', form=form)
 
 
@@ -180,33 +170,42 @@ def delete_user():
     if not g.user:
         flash('Access Unauthorized', 'danger')
         return redirect('/')
-    
+
     do_logout()
 
     db.session.delete(g.user)
     db.session.commit()
-    flash('Your account has been deleted', 'danger')
-    return redirect('/recipes_form')
+    flash('Your profile has been deleted!', 'success')
+    return redirect('/recipes')
 
+@app.route('/about')
+def about_page():
+    """To show about page"""
 
+    return render_template('about.html')
 
-########################################################
+##################################################
 #Recipe Routes:
 
-@app.route('/recipes_form', methods=['GET', 'POST'])
-def recipes_form():
+@app.route('/')
+def homepage():
+    """Show homepage of Recipe Finder"""
+
+    return render_template('homepage.html')
+
+
+@app.route('/recipes', methods=['GET', 'POST'])
+def recipes():
     """Show recipes form. Get list of filtered recipes or random recipes"""
 
     form = RecipeForm()
  
     if request.method == 'GET' and g.user:
-
         form.diet.data = g.user.diet
         form.intolerances.data = g.user.intolerances
         form.exclude_ingredients.data = g.user.exclude_ingredients
 
     else:
-
         if form.validate_on_submit():
             
             diet = form.diet.data
@@ -215,10 +214,10 @@ def recipes_form():
             food_type = form.food_type.data
             num_of_recipes = form.num_of_recipes.data
 
-            # Get random recipes:
+            #Get random recipes
             if diet == 'None' and intolerances == [] and exclude_ingredients == '' and food_type == '':
                 resp = requests.get(f'{API_BASE_URL}/random', 
-                                   params ={'apiKey': API_SECRET_KEY, 'number':9})
+                                   params ={'apiKey': API_SECRET_KEY, 'number':10})
                 
                 data = resp.json()
 
@@ -228,33 +227,31 @@ def recipes_form():
                     return redirect('/')
                 
                 if g.user:
-                    # Get all recipe ids in user's saved recipes to change star btn color
-                    recipe_ids =  [recipe.recipe_id for recipe in g.user.saved_recipes]
-
-                    return render_template('recipes/random_recipes.html', data=data, recipe_ids=recipe_ids)                
+                    recipe_ids =  [recipe.recipe_id for recipe in g.user.saved_recipes]   
+                    return render_template('recipes/random_recipes.html', data=data, recipe_ids=recipe_ids)                   
                 else:
                     return render_template('recipes/random_recipes.html', data=data)
             
             else:
-                # Get filtered recipes:
+                # Get filtered recipes
                 resp = requests.get(f'{API_BASE_URL}/complexSearch', 
                             params = {'apiKey': API_SECRET_KEY, 'diet': diet, 'intolerances': intolerances, 
                                     'excludeIngredients': exclude_ingredients, 'query':food_type,
                                         'number': num_of_recipes})
-
+              
                 data = resp.json()
-
+                
                 # Maximum API calls have been reached
                 if 'code' in data:
                     flash('Please try searching for recipes tomorrow!', 'danger')
                     return redirect('/')
                 
+                # No recipe results show up
                 elif data['results'] == []:
                     flash('No recipes found with those selections', 'danger')
-                    return redirect('/recipes_form')
+                    return redirect('/recipes')
             
             if g.user:
-                # Get all recipe ids in user's saved recipes to change star btn color
                 recipe_ids =  [recipe.recipe_id for recipe in g.user.saved_recipes]
                 
                 return render_template('recipes/recipes_list.html', data=data, recipe_ids=recipe_ids)
@@ -277,23 +274,18 @@ def get_recipe_info(recipe_id):
     data = resp.json()
 
     if g.user:
-        notes = Note.query.filter(Note.recipe_id==recipe_id).all()  
-        users_saved_recipe_ids = [recipe.recipe_id for recipe in g.user.saved_recipes]               #[{Recipe1}, {Recipe2}]
-        return render_template('recipes/recipes_info.html', form=form, data=data, recipe_id=recipe_id, notes=notes, users_saved_recipe_ids= users_saved_recipe_ids)
+        notes = Note.query.filter(Note.user_id==g.user.id, Note.recipe_id==recipe_id).all()   #[{Note1}, {Note2}]
+        users_saved_recipe_ids = [recipe.recipe_id for recipe in g.user.saved_recipes]  #[{Recipe1}, {Recipe2}]
+        return render_template('recipes/recipes_info.html', form=form, data=data, recipe_id=recipe_id, notes=notes, users_saved_recipe_ids=users_saved_recipe_ids)
     else: 
         return render_template('recipes/recipes_info.html', form=form, data=data, recipe_id=recipe_id)
 
-    
-@app.route('/save_recipe/<int:recipe_id>')
+
+@app.route('/save_recipe/<int:recipe_id>', methods=['GET', 'POST'])
 def save_recipe(recipe_id):
     """To save a recipe for the user. Adds the recipe to the db"""
 
     if g.user:
-        recipe = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
-
-        if recipe in g.user.saved_recipes:
-            flash('You already saved that recipe', 'danger')
-        else:
             resp = requests.get(f'{API_BASE_URL}/{recipe_id}/information',
                             params={'apiKey': API_SECRET_KEY})
         
@@ -304,10 +296,10 @@ def save_recipe(recipe_id):
             save_recipe = Saved_Recipe(user_id=g.user.id, recipe_id=recipe_id, title=data['title'], image_url=image) 
             db.session.add(save_recipe)
             db.session.commit()
-            flash('Your recipe has been saved', 'danger')
+            flash('Your recipe has been saved!', 'success')
             return redirect('/users_recipes')
     else:
-        flash('Sign up or log in to save recipes', 'danger')
+        flash("Sign Up or Log In to save recipes", 'danger')
         return redirect(f'/recipe/{recipe_id}')
 
 
@@ -321,7 +313,7 @@ def users_recipes():
 
     users_recipes = g.user.saved_recipes
 
-    recipe_ids = [ recipe.recipe_id for recipe in users_recipes]
+    recipe_ids = [recipe.recipe_id for recipe in users_recipes]
     
     if len(users_recipes) == 0:
         flash('You have no saved recipes', 'danger')
@@ -336,17 +328,18 @@ def delete_saved_recipe(recipe_id, user_id):
     if not g.user or g.user.id != user_id:
         flash('Access Unauthorized', 'danger')
         return redirect('/')
-    
+
     recipe = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
  
     db.session.delete(recipe)
     db.session.commit()
-    flash('Your recipe has been deleted', 'danger')
+    flash('Your recipe has been deleted!', 'success')
     return redirect('/users_recipes')
+   
 
 
 ###########################################################
-#Notes Routes:
+#Note Routes:
 
 @app.route('/save_notes/<int:recipe_id>', methods=['POST'])
 def save_notes(recipe_id):
@@ -355,12 +348,16 @@ def save_notes(recipe_id):
     if not g.user:
         flash('Access unauthorized', 'danger')
         return redirect('/')
-    
+
     form = NoteForm()
 
     if form.validate_on_submit():
         
         note = form.note.data
+
+        if note == "":
+            flash('Your note is empty. Please try again.', 'danger')
+            return redirect(f'/recipe/{recipe_id}')
 
         saved_recipe_obj = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
 
@@ -368,7 +365,7 @@ def save_notes(recipe_id):
   
         db.session.add(save_note)
         db.session.commit()
-    
+
         return redirect(f'/recipe/{recipe_id}')
 
 
@@ -380,9 +377,11 @@ def edit_notes(recipe_id):
         flash('Access Unauthorized', 'danger')
         return redirect('/')
 
-    notes = Note.query.filter(Note.recipe_id==recipe_id).all()
-
-    return render_template('notes/notes.html', notes=notes, recipe_id=recipe_id)
+    notes = Note.query.filter(Note.user_id==g.user.id, Note.recipe_id==recipe_id).all()
+    
+    recipe = Saved_Recipe.query.filter(Saved_Recipe.recipe_id==recipe_id, Saved_Recipe.user_id==g.user.id).first()
+  
+    return render_template('notes/notes.html', notes=notes, recipe_id=recipe_id, title=recipe.title, image_url=recipe.image_url)
 
 
 @app.route('/delete_note/<int:note_id>/<int:recipe_id>/<int:user_id>', methods=['POST'])
@@ -397,7 +396,7 @@ def delete_note(note_id, recipe_id, user_id):
 
     db.session.delete(note)
     db.session.commit()
-
+    flash('Your note has been deleted!', 'success')
     return redirect(f'/edit_notes/{recipe_id}')
 
 
@@ -406,12 +405,6 @@ def delete_note(note_id, recipe_id, user_id):
 
 
     
-
-
-
-
-
-
 
 
 

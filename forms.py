@@ -11,7 +11,6 @@ intolerances = ['Dairy', 'Egg', 'Gluten', 'Grain', 'Peanut', 'Seafood',
                 'Sesame', 'Shellfish', 'Soy', 'Sulfite', 'Tree Nut', 'Wheat']
 
 
-
 class SignupForm(FlaskForm):
     """Form to sign up a user"""
 
@@ -42,16 +41,16 @@ class EditProfileForm(FlaskForm):
 
 
 class RecipeForm(FlaskForm):
-    """Form for a user to filter out recipes"""
+    """Form for a user to optionally filter out recipes"""
 
     diet = SelectField('Diet', choices = [(diet, diet) for diet in diets])
     intolerances = SelectMultipleField('Food Allergies/Intolerances', choices=[(intolerance, intolerance) for intolerance in intolerances])
-    exclude_ingredients = StringField('Ingredients to Exclude (e.g. poppyseed, onions, etc.)')
+    exclude_ingredients = StringField('Ingredients to Exclude (e.g. radish, onions, etc.)')
     food_type = StringField('Food Type and/or Meal Type (e.g. pasta, chicken, salad, dinner, etc.)')
     num_of_recipes = IntegerField('Number of recipes:', validators=[NumberRange(min=0, max=100), Optional()])
 
 
 class NoteForm(FlaskForm):
-    """Add notes to saved recipes"""
+    """Form to add notes to a saved recipe"""
 
     note = TextAreaField('Recipe Notes')

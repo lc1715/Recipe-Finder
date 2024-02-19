@@ -1,110 +1,99 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% include 'select_checkboxes.html'%}
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="card form" style="width: 38rem;">
+            <div class="card-body">
+
+                <h1 class="mb-4 mt-3 text-center">User Profile</h1>
+                <h5 class="text-center mb-4">Fill out the form below to update your profile</h5>
+
+                <form action="/edit_profile" method="POST">
+
+                    {{form.hidden_tag()}}
 
 
-<!-- Using JQuery and CSS to create checkboxes -->
-<style>
-    select {
-        width: 30%;
-    }
-</style>
+                    {% if form.username.errors %}
 
-<script>
-    $(function () {
-        $('select').multipleSelect({
-            multiple: true,
-            multipleWidth: 150
-        })
-    })
-</script>
+                    {{form.username.label(class_='label-font')}}
 
+                    {% for error in form.username.errors %}
+                    <span class="text-danger">- {{error}}</span>
+                    {% endfor %}
 
-<div class="row justify-content-md-center">
-    <div class="col-md-7 col-lg-5">
+                    {{form.username(class_="form-control")}}
 
-        <h2 class="join-message">User Profile</h2>
-        <h6>Fill out the form below to update your profile:
-        </h6>
+                    {% else %}
+                    {{form.username.label(class_='label-font mt-2')}}
+                    {{form.username(class_="form-control")}}
 
-        <form action="/edit_profile" method="POST">
-
-            {{form.hidden_tag()}}
-
-            {% if form.username.errors %}
-
-            {{form.username.label(class_='text-success')}}
-
-            {% for error in form.username.errors %}
-            <span class="text-danger">{{error}}</span>
-            {% endfor %}
-
-            {{form.username(class_="form-control")}}
-
-            {% else %}
-            {{form.username.label(class_='text-success')}}
-            {{form.username(class_="form-control")}}
-
-            {% endif %}
+                    {% endif %}
 
 
-            {% if form.email.errors %}
+                    {% if form.email.errors %}
 
-            {{form.email.label(class_='text-success mt-3')}}
+                    {{form.email.label(class_='label-font')}}
 
-            {% for error in form.email.errors %}
-            <span class="text-danger">{{error}}</span>
-            {% endfor %}
+                    {% for error in form.email.errors %}
+                    <span class="text-danger">- {{error}}</span>
+                    {% endfor %}
 
-            {{form.email(class_="form-control")}}
+                    {{form.email(class_="form-control")}}
 
-            {% else %}
-            {{form.email.label(class_='text-success mt-3')}}
-            {{form.email(class_="form-control")}}
+                    {% else %}
+                    {{form.email.label(class_='label-font mt-4')}}
+                    {{form.email(class_="form-control")}}
 
-            {% endif %}
+                    {% endif %}
 
 
-            {{form.diet.label(class_='text-success mt-3 label')}}
-            <div>
-                {{form.diet(class_='select hello', style='width:550px')}}
+                    {{form.diet.label(class_='label-font mt-4')}}
+                    <div>
+                        {{form.diet}}
+                    </div>
+
+
+                    {{form.intolerances.label(class_='label-font mt-4')}}
+                    <div>
+                        {{form.intolerances}}
+                    </div>
+
+
+                    {{form.exclude_ingredients.label(class='label-font mt-4')}}
+                    {{form.exclude_ingredients(class_="form-control")}}
+
+
+                    {% if form.password.errors %}
+
+                    {{form.password.label(class_='label-font')}}
+
+                    {% for error in form.password.errors%}
+                    <span class="text-danger">- {{error}}</span>
+                    {%endfor%}
+
+                    {{form.password(class_="form-control")}}
+
+                    {% else %}
+                    {{form.password.label(class_='label-font mt-4')}}
+                    {{form.password(class_="form-control")}}
+
+                    {% endif %}
+
+                    <button class="btn btn-md btn-warning mt-4">Save Changes</button>
+
+                    <a href="/recipes" class="btn btn-md btn-warning mt-4">Cancel</a>
+
+                    <button formaction="/delete_user" formmethod="POST"
+                        class="delete-profile-btn btn btn-md btn-outline-secondary mt-4">
+                        Delete Profile
+                    </button>
+                </form>
+
             </div>
-
-
-            {{form.intolerances.label(class_='text-success mt-3')}}
-            <div>
-                {{form.intolerances(class_='select hello', style='width:550px')}}
-            </div>
-
-
-            {{form.exclude_ingredients.label(class_='text-success mt-3')}}
-            {{form.exclude_ingredients(class_="form-control")}}
-
-
-            {% if form.password.errors %}
-
-            {{form.password.label(class_='text-success mt-3')}}
-
-            {% for error in form.password.errors%}
-            <span class="text-danger">{{error}}</span>
-            {%endfor%}
-
-            {{form.password(class_="form-control")}}
-
-            {% else %}
-            {{form.password.label(class_='text-success mt-3')}}
-            {{form.password(class_="form-control")}}
-
-            {% endif %}
-
-            <button class="btn btn-sm btn-info mt-3">Save Changes</button>
-
-            <a href="/recipes_form" class="btn btn-sm btn-info mt-3">Cancel</a>
-
-            <button formaction="/delete_user" formmethod="POST" class="btn btn-sm btn-primary mt-3">Delete
-                Profile</button>
-
-        </form>
+        </div>
     </div>
 </div>
 
