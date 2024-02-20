@@ -7,10 +7,10 @@ charset-normalizer==3.2.0
 click==8.1.7
 cmake==3.27.2
 cryptography==3.4.8
-dbus-python==1.2.18
+# dbus-python==1.2.18
 decorator==5.1.1
 distro==1.7.0
-distro-info===1.1build1
+# distro-info===1.1build1
 dnspython==2.4.2
 email-validator==2.1.0.post1
 executing==1.2.0
@@ -44,17 +44,17 @@ netifaces==0.11.0
 networkx==3.1
 neuralart==1.1.1
 numpy==1.25.2
-nvidia-cublas-cu11==11.10.3.66
-nvidia-cuda-cupti-cu11==11.7.101
-nvidia-cuda-nvrtc-cu11==11.7.99
-nvidia-cuda-runtime-cu11==11.7.99
-nvidia-cudnn-cu11==8.5.0.96
-nvidia-cufft-cu11==10.9.0.58
-nvidia-curand-cu11==10.2.10.91
-nvidia-cusolver-cu11==11.4.0.1
-nvidia-cusparse-cu11==11.7.4.91
-nvidia-nccl-cu11==2.14.3
-nvidia-nvtx-cu11==11.7.91
+# nvidia-cublas-cu11==11.10.3.66
+# nvidia-cuda-cupti-cu11==11.7.101
+# nvidia-cuda-nvrtc-cu11==11.7.99
+# nvidia-cuda-runtime-cu11==11.7.99
+# nvidia-cudnn-cu11==8.5.0.96
+# nvidia-cufft-cu11==10.9.0.58
+# nvidia-curand-cu11==10.2.10.91
+# nvidia-cusolver-cu11==11.4.0.1
+# nvidia-cusparse-cu11==11.7.4.91
+# nvidia-nccl-cu11==2.14.3
+# nvidia-nvtx-cu11==11.7.91
 oauthlib==3.2.0
 packaging==23.2
 parso==0.8.3
@@ -66,11 +66,11 @@ psycopg2-binary==2.9.9
 ptyprocess==0.7.0
 pure-eval==0.2.2
 Pygments==2.16.1
-PyGObject==3.42.1
+# PyGObject==3.42.1
 PyJWT==2.3.0
 pyparsing==2.4.7
-python-apt==2.4.0+ubuntu1
-PyYAML==5.4.1
+# python-apt==2.4.0+ubuntu1
+# PyYAML==5.4.1
 requests==2.31.0
 SecretStorage==3.3.1
 simplejson==3.19.1
@@ -78,14 +78,14 @@ six==1.16.0
 SQLAlchemy==2.0.23
 stack-data==0.6.2
 sympy==1.12
-systemd-python==234
+# systemd-python==234
 torch==2.0.1
 traitlets==5.9.0
-triton==2.0.0
+# triton==2.0.0
 typing_extensions==4.7.1
-ubuntu-advantage-tools==8001
-ufw==0.36.1
-unattended-upgrades==0.1
+# ubuntu-advantage-tools==8001
+# ufw==0.36.1
+# unattended-upgrades==0.1
 urllib3==2.0.4
 wadllib==1.3.6
 wcwidth==0.2.6
