@@ -19,7 +19,7 @@
                                 <img class="recipe-img card-img-top" src="{{recipe.image_url}}" alt="Recipe Image">
                                 <form>
                                     <button formaction="/delete_recipe/{{recipe.recipe_id}}/{{recipe.user_id}}"
-                                        formmethod="POST" class="btn btn-sm btn-secondary star">
+                                        formmethod="POST" class="btn btn-sm btn-danger trash-btn star">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </button>
                                 </form>

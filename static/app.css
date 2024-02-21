@@ -4,82 +4,45 @@
     color: rgb(0,0,0);
 }
 
-.label-font{
-   font-size: 17px;
-   font-weight: 500;
-   color : rgb(0,0,0) 
-}
-
 .nav {
     background-color: #FEDA5B;
-}
-
-.star {
-    position: absolute;
-    top: 0%;
-    right: 0%;
 }
 
 .about-title {
     margin-top: 10px;
     margin-bottom: 20px;
-    font-family: system-ui;
+    font-family: system-ui,sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
-#homepage-intro {
-    /* Place homepage text on background image */
-    position: relative;    
-}
+a.homepage-btns{
+    border: .1px solid black;
+    box-shadow: 0px 6px 4px -6px rgb(123, 123, 123);
+    background-color: #e9cfcc;
+    color: black;
+ }
 
-.homepage-font {
-    font-family: system-ui,sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; 
-    font-style: italic;
-    margin-top: 230px;
-    font-weight: 600;
+ a.homepage-btns:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+    color: black;
+    background-color: #ecdcda;
+    border-color: black;
 }
-
-.homepage-div-btns {
-    margin-top: 70px;
-    position: relative;
-}
-
-button.recipe-delete-btn{
-    border: .1px solid #dc5021;
-    background-color: #dc5021;
-}
-
-button.note-delete-btn{
-    border: .1px solid #dc5021;
-    background-color: #dc5021;
-    font-size: 11px;
-}
-
-i {
-    color: white;
-}
-
-.homepage-btns{ 
-    border: 1px solid black;
-    background-color: #f0f8ff;
-   color: black; 
- } 
 
 /* Background image */
- img.background {
+img.background {
     /* Set rules to fill background */
     min-height: 100%;
     min-width: 1024px;
-      
+     
     /* Set up proportionate scaling */
     width: 100%;
     height: auto;
-      
+     
     /* Set up positioning */
     position: fixed;
     top: 0;
     left: 0;
   }
-  
+ 
   @media screen and (max-width: 1024px) {
     img.background {
       left: 50%;
@@ -87,10 +50,82 @@ i {
     }
   }
 
+  #homepage-intro { 
+    /* Places homepage text on background image */
+    position: relative;
+}
+
+.homepage-div-btns {
+    margin-top: 70px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.homepage-font {
+    font-family: system-ui,sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-style: italic;
+    margin-top: 230px;
+    font-weight: 600;
+}
+
+@media(min-width:769px) and (max-width:1024px){
+    .homepage-font{
+        margin-top: 308px;
+    }
+}
+
+@media(min-width:481px) and (max-width:768px){
+    img.background {
+        content:url("/static/images/Modified-Background-Image.jpg");
+    }
+    .homepage-font{
+        margin-top: 190px;
+    }
+    .homepage-div-btns {
+        margin-top: 48px;
+        margin-bottom: 32px;
+        position: relative;
+    }
+}
+
+@media(min-width:280px) and (max-width: 480px){
+    img.background {
+        content:url("/static/images/Modified-Background-Image.jpg");
+    }
+    .homepage-font{
+        margin-top: 144px;
+    }
+    .homepage-div-btns {
+        margin-top: 48px;
+        margin-bottom: 32px;
+        position: relative;
+    }
+}
+
+button.trash-btn{
+    border: .1px solid #dc5021;
+    background-color: #dc5021;
+ }
+
+ button.note-delete-btn{
+    border: .1px solid #dc5021;
+    background-color: #dc5021;
+}
+
+i {
+    color: white;
+}
+
 .form {
     margin-bottom: 1rem;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
+
+.label-font{
+    font-size: 17px;
+    font-weight: 500;
+    color : rgb(0,0,0)
+ }
 
 h6 {
     margin-bottom: 20px;
@@ -104,7 +139,6 @@ input.num_of_recipes {
     font-size: 24px;
     margin-top: 8px;
     color: black;
-
 }
 
 .recipe-img{
@@ -120,9 +154,21 @@ input.num_of_recipes {
     margin-bottom: 30px;
 }
 
+.div-img-recipe{
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
 .img-recipe-info{
     border-radius: 6px;
  }
+
+ .star {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+}
 
  .delete-img {
     margin-top: 10px;
@@ -144,16 +190,6 @@ input.num_of_recipes {
     }
 }
 
-.label{
-    font-weight: 500;
-}
-
-.img-div {
-    position: relative;
-    display: inline-block;
-    max-width: 100%;
-}
-
 /*Select fields */
 button.ms-choice{
     height: 35px;
@@ -167,17 +203,6 @@ button.ms-choice>span{
 
 span.placeholder {
     background-color: white;
-    /* Remove gray bar on multiple select field */
+    /* Removes gray bar on multiple select field */
     min-height: 0;
 }
-
-
-
-
-
-
-
-
-
-
-
