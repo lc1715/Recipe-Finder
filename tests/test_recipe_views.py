@@ -95,7 +95,6 @@ class RecipeViewTestCase(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertIn('No recipes found with those selections', str(resp.data))
 
-
         
     def test_show_recipe_info(self):
         """Test that a user can see the information about a recipe"""

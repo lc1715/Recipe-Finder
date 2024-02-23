@@ -59,26 +59,26 @@ class UserModelTestCase(TestCase):
     def test_signup_method(self):
         """Test the signup method"""
 
-        user1 = User.signup('test1', 'test1@email.com', 'testing123', 'vegan', '{dairy, wheat}', None)
+        user1 = User.signup('test1', 'test1@email.com', 'testing123', 'vegan', ['Dairy', 'Gluten'], None)
 
         self.assertNotEqual(user1.password, 'testing123')
         self.assertTrue(user1.password.startswith('$2b$'))
         self.assertEqual(user1.username, 'test1')
         self.assertEqual(user1.diet, 'vegan')
-        self.assertEqual(user1.intolerances, '{dairy, wheat}')
+        self.assertEqual(user1.intolerances, ['Dairy', 'Gluten'])
 
 
     def test_duplicate_user_creation(self):
         """Test signup method with the same username or email as another user"""
 
-        User.signup('test1', 'test1@email.com', 'testing123', 'vegan', '{dairy, wheat}', 'peanut')
+        User.signup('test1', 'test1@email.com', 'testing123', 'vegan', ['Dairy', 'Gluten'], 'peanut')
 
         with self.assertRaises(IntegrityError) as context:
             User.signup('test1', 
                         'test1@email.com', 
                         'testing123', 
                         'vegan', 
-                        '{dairy, wheat}', 
+                        ['Dairy', 'Gluten'], 
                         'peanut')
             db.session.commit()
 
