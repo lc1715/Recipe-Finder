@@ -2,4 +2,3 @@ venv/
 
 secret_keys.py
 
-__pycache__
