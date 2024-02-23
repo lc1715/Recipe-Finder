@@ -56,7 +56,16 @@ def do_logout():
 
     if CURR_USER_KEY_NAME in session:
         del session[CURR_USER_KEY_NAME]
+        
 
+###################################################################
+# About page
+        
+@app.route('/about')
+def about_page():
+    """To show about page"""
+
+    return render_template('about.html')
 
 
 ####################################################################
@@ -178,11 +187,6 @@ def delete_user():
     flash('Your profile has been deleted!', 'success')
     return redirect('/recipes')
 
-@app.route('/about')
-def about_page():
-    """To show about page"""
-
-    return render_template('about.html')
 
 ##################################################
 #Recipe Routes:
