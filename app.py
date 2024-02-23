@@ -289,7 +289,16 @@ def get_recipe_info(recipe_id):
 def save_recipe(recipe_id):
     """To save a recipe for the user. Adds the recipe to the db"""
 
-    if g.user:
+    if g.user:         
+            users_saved_recipes = g.user.saved_recipes
+
+            recipe_ids = [recipe.recipe_id  for recipe in users_saved_recipes]
+
+            if recipe_id in recipe_ids:
+                flash('This recipe has already been saved!', 'success')
+                return render_template('recipes/users_recipes.html')
+            
+         
             resp = requests.get(f'{API_BASE_URL}/{recipe_id}/information',
                             params={'apiKey': API_SECRET_KEY})
         
