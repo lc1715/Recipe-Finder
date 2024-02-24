@@ -295,8 +295,8 @@ def save_recipe(recipe_id):
             recipe_ids = [recipe.recipe_id  for recipe in users_saved_recipes]
 
             if recipe_id in recipe_ids:
-                flash('This recipe has already been saved!', 'success')
-                return render_template('recipes/users_recipes.html')
+                flash('This recipe has already been saved!', 'danger')
+                return redirect('/users_recipes')
             
          
             resp = requests.get(f'{API_BASE_URL}/{recipe_id}/information',
@@ -341,9 +341,15 @@ def delete_saved_recipe(recipe_id, user_id):
     if not g.user or g.user.id != user_id:
         flash('Access Unauthorized', 'danger')
         return redirect('/')
+    
+    saved_recipes = g.user.saved_recipes
 
     recipe = Saved_Recipe.query.filter(Saved_Recipe.user_id==g.user.id, Saved_Recipe.recipe_id==recipe_id).first()
  
+    if recipe not in saved_recipes:
+        flash('You already deleted this recipe!', 'danger')
+        return redirect('/users_recipes')
+
     db.session.delete(recipe)
     db.session.commit()
     flash('Your recipe has been deleted!', 'success')
@@ -405,7 +411,13 @@ def delete_note(note_id, recipe_id, user_id):
         flash('Access Unauthorized', 'danger')
         return redirect('/')
     
+    users_notes = g.user.notes
+    
     note = Note.query.get(note_id)
+
+    if note not in users_notes:
+        flash('You already deleted this note!', 'danger')
+        return redirect(f'/recipe/{recipe_id}')
 
     db.session.delete(note)
     db.session.commit()

@@ -1,6 +1,6 @@
 # Recipe Finder
 
-This web application was designed to help users who are on a dietary restriction due to food allergies or intolerances to easily search for recipes. Users who do not have any dietary restrictions can also use this application to search through thousands of recipes.     
+This web application was designed to help users who are on a dietary restriction due to food allergies or intolerances to easily search for recipes. Users who do not have any dietary restrictions can also use this web application to search through thousands of recipes.     
 
 Live App: [Recipe Finder](https://recipe-finder-kigw.onrender.com) 
 
