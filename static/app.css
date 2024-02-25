@@ -68,13 +68,24 @@ img.background {
     font-weight: 600;
 }
 
-@media(min-width:769px) and (max-width:1024px){
+@media(min-width:769px) and (max-width:1024px) and (orientation:portrait) {
     .homepage-font{
         margin-top: 308px;
     }
 }
 
-@media(min-width:481px) and (max-width:768px){
+@media(min-width:769px) and (max-width:1024px) and (orientation:landscape) {
+    .homepage-font{
+        margin-top: 207px;
+    }
+    .homepage-div-btns {
+        margin-top: 66px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+}
+
+@media(min-width:481px) and (max-width:768px) and (orientation:portrait){
     img.background {
         content:url("/static/images/Modified-Background-Image.jpg");
     }
@@ -88,7 +99,35 @@ img.background {
     }
 }
 
-@media(min-width:280px) and (max-width: 480px){
+@media(min-width:481px) and (max-width:768px) and (orientation:landscape){
+    img.background {
+        content:url("/static/images/Modified-Background-Image.jpg");
+    }
+    .homepage-font{
+        margin-top: 121px;
+    }
+    .homepage-div-btns {
+        margin-top: 48px;
+        margin-bottom: 32px;
+        position: relative;
+    }
+}
+
+@media(min-width:280px) and (max-width: 480px) and (orientation:portrait) {
+    img.background {
+        content:url("/static/images/Modified-Background-Image.jpg");
+    }
+    .homepage-font{
+        margin-top: 144px;
+    }
+    .homepage-div-btns {
+        margin-top: 48px;
+        margin-bottom: 32px;
+        position: relative;
+    }
+}
+
+@media(min-width:280px) and (max-width: 480px) and (orientation:landscape) {
     img.background {
         content:url("/static/images/Modified-Background-Image.jpg");
     }
