@@ -72,16 +72,22 @@ img.background {
     .homepage-font{
         margin-top: 308px;
     }
+    .last-line {
+        padding-right: 200px;
+        padding-left: 200px;
+    }
 }
 
 @media(min-width:769px) and (max-width:1024px) and (orientation:landscape) {
     .homepage-font{
-        margin-top: 207px;
+        margin-top: 150px;
     }
     .homepage-div-btns {
-        margin-top: 66px;
-        margin-bottom: 20px;
-        position: relative;
+        margin-top: 64px;
+    }
+    .last-line {
+        padding-right: 240px;
+        padding-left: 240px;
     }
 }
 
@@ -95,7 +101,6 @@ img.background {
     .homepage-div-btns {
         margin-top: 48px;
         margin-bottom: 32px;
-        position: relative;
     }
 }
 
@@ -109,7 +114,6 @@ img.background {
     .homepage-div-btns {
         margin-top: 48px;
         margin-bottom: 32px;
-        position: relative;
     }
 }
 
@@ -123,7 +127,6 @@ img.background {
     .homepage-div-btns {
         margin-top: 48px;
         margin-bottom: 32px;
-        position: relative;
     }
 }
 
@@ -137,7 +140,6 @@ img.background {
     .homepage-div-btns {
         margin-top: 48px;
         margin-bottom: 32px;
-        position: relative;
     }
 }
 
