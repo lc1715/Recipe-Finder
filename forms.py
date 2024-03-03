@@ -47,7 +47,7 @@ class RecipeForm(FlaskForm):
     intolerances = SelectMultipleField('Food Allergies/Intolerances', choices=[(intolerance, intolerance) for intolerance in intolerances])
     exclude_ingredients = StringField('Ingredients to Exclude (e.g. radish, onions, etc.)')
     food_type = StringField('Food Type and/or Meal Type (e.g. pasta, chicken, salad, dinner, etc.)')
-    num_of_recipes = IntegerField('Number of recipes:', validators=[NumberRange(min=0, max=100), Optional()])
+    num_of_recipes = IntegerField('Number of recipes:', validators=[NumberRange(min=1, max=100), Optional()])
 
 
 class NoteForm(FlaskForm):
