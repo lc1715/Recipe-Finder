@@ -220,8 +220,12 @@ def recipes():
 
             #Get random recipes
             if diet == 'None' and intolerances == [] and exclude_ingredients == '' and food_type == '':
-                resp = requests.get(f'{API_BASE_URL}/random', 
+                if num_of_recipes == None: 
+                    resp = requests.get(f'{API_BASE_URL}/random', 
                                    params ={'apiKey': API_SECRET_KEY, 'number':10})
+                else: 
+                    resp = requests.get(f'{API_BASE_URL}/random', 
+                                   params ={'apiKey': API_SECRET_KEY, 'number':num_of_recipes})
                 
                 data = resp.json()
 
