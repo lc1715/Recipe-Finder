@@ -119,24 +119,6 @@ def login():
     return render_template('/users/login.html', form=form)
 
 
-@app.route('/login/demo_user', methods=['GET'])
-def loginDemoUser():
-    """Log in Demo User"""
-  
-    user_obj = User.authenticate(
-        username= 'DemoUser',
-        password = 'Password123'
-    )
-
-    if user_obj:
-        do_login(user_obj)
-        return redirect('/recipes')
-    else:
-        flash('Your username or password is incorrect. Please try again.', 'danger')
-
-    return redirect('/')
-    
-
 @app.route('/logout', methods=['POST'])
 def logout():
     """Log out user"""
