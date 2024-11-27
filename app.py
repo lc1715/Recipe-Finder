@@ -18,13 +18,9 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', FLASK_SECRET_KEY)
 
-app.app_context().push()  
-
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
-db.create_all()
-
 
 CURR_USER_KEY_NAME = "curr_user"
 
@@ -117,10 +113,28 @@ def login():
         if user_obj:
             do_login(user_obj)
             return redirect('/recipes')
-        
+        else: 
+            flash('Your username or password is incorrect. Please try again.', 'danger')
+            
+    return render_template('/users/login.html', form=form)
+
+
+@app.route('/login/demo_user', methods=['GET'])
+def loginDemoUser():
+    """Log in Demo User"""
+  
+    user_obj = User.authenticate(
+        username= 'DemoUser',
+        password = 'Password123'
+    )
+
+    if user_obj:
+        do_login(user_obj)
+        return redirect('/recipes')
+    else:
         flash('Your username or password is incorrect. Please try again.', 'danger')
 
-    return render_template('/users/login.html', form=form)
+    return redirect('/')
     
 
 @app.route('/logout', methods=['POST'])
