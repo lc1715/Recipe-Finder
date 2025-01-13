@@ -73,8 +73,8 @@ img.background {
         margin-top: 308px;
     }
     .last-line {
-        padding-right: 200px;
-        padding-left: 200px;
+        padding-right: 140px;
+        padding-left: 140px;
     }
 }
 
@@ -225,7 +225,7 @@ input.num_of_recipes {
     margin-left: 12rem;
 }
 
-@media(max-width:600px){
+@media(max-width:767.98px){
     .delete-profile-btn {
         margin-left: 0rem;
     }
