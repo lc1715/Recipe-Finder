@@ -3,13 +3,13 @@
 {% block content %}
 
 <form method="POST">
-    <h5 class="recipe-list-title font-style display-6 fw-semibold fst-italic">Filtered Recipes:</h5>
+    <h1 class="recipe-list-title fw-semibold fst-italic">Filtered Recipes:</h1>
 
     <div class="container">
         <div class="row">
 
             {% for recipe in data.results %}
-            <div class="card recipe-info border-light" style="width: 23rem;">
+            <div class="card col-sm-6 col-lg-4 recipe-info border-light">
                 <div class="card-body">
                     <div class="position-relative mb-3">
 

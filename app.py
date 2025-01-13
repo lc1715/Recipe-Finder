@@ -258,9 +258,9 @@ def recipes():
             if g.user:
                 recipe_ids =  [recipe.recipe_id for recipe in g.user.saved_recipes]
                 
-                return render_template('recipes/recipes_list.html', data=data, recipe_ids=recipe_ids)
+                return render_template('recipes/filtered_recipes.html', data=data, recipe_ids=recipe_ids)
             else:
-                return render_template('recipes/recipes_list.html', data=data)
+                return render_template('recipes/filtered_recipes.html', data=data)
 
     return render_template('recipes/recipes_form.html', form=form)
 

@@ -3,14 +3,16 @@
 {% block content %}
 
 <form method="POST">
-    <h5 class="recipe-list-title display-6 fw-semibold fst-italic font-style">Random Recipes:</h5>
+    <h1 class="recipe-list-title fw-semibold fst-italic">Random Recipes:</h1>
+
     <div class="container">
         <div class="row">
 
             {% for recipe in data.recipes %}
-            <div class="card recipe-info border-light" style="width: 23rem;">
+            <div class="card col-sm-6 col-lg-4 recipe-info border-light">
                 <div class="card-body">
                     <div class="position-relative mb-3">
+
                         <a href="/recipe/{{recipe.id}}" class="text-decoration-none">
                             <div class="img-div">
                                 <img src="{{recipe.image}}" class="recipe-img card-img-top" alt="Recipe Image">
@@ -25,6 +27,7 @@
                             </div>
                             <p class="recipe-name fw-normal">{{recipe.title}}</p>
                         </a>
+
                     </div>
                 </div>
             </div>

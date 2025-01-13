@@ -4,13 +4,13 @@
 
 <form>
     {% if users_recipes | length > 0 %}
-    <h5 class="recipe-list-title display-6 fw-semibold fst-italic font-style">Saved Recipes:</h5>
+    <h1 class="recipe-list-title fw-semibold fst-italic">Saved Recipes:</h1>
 
-    <div class="container ">
+    <div class="container">
         <div class="row">
 
             {% for recipe in users_recipes %}
-            <div class="card recipe-info border-light" style="width: 23rem;">
+            <div class="card col-sm-6 col-lg-4 recipe-info border-light">
                 <div class="card-body">
                     <div class="position-relative mb-3">
 
