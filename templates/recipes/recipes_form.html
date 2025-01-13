@@ -4,35 +4,31 @@
 {% include 'select_checkboxes.html'%}
 
 <div class="container">
-    <div class="row justify-content-md-center">
-        <div class="card form" style="width: 38rem;">
+    <div class="row justify-content-center p-2">
+        <div class="card form" style="width: 38rem">
             <div class="card-body">
 
                 <form action="/recipes" method="POST">
                     <h1 class="mb-4 mt-3 text-center">Recipe Filter</h1>
-                    <h5>Select your allergens to find recipes excluding those ingredients.
-                        *All of the selections below are optional.* If none of the choices
-                        are selected, we will provide you with a surprise list of random recipes.
+                    <h5>Select your allergens or dietary preferences to customize your recipe search.
+                        Additionally, you can specify ingredients to exclude, the type of meal you're looking for,
+                        and the number of recipes you'd like to receive. All fields are optional.
+                        If no selections are made, you will receive a surprise list of random recipes.
                     </h5>
 
                     {{form.hidden_tag()}}
 
-
                     {{form.diet.label(class_='label-font mt-4')}}
                     {{form.diet}}
-
 
                     {{form.intolerances.label(class_='label-font mt-4')}}
                     {{form.intolerances}}
 
-
                     {{form.exclude_ingredients.label(class_='label-font mt-4')}}
                     {{form.exclude_ingredients(class_="form-control")}}
 
-
                     {{form.food_type.label(class_='label-font mt-4')}}
                     {{form.food_type(class_="form-control")}}
-
 
                     {{form.num_of_recipes.label(class_='label-font mt-4')}}
                     {{form.num_of_recipes(class_="form-control num_of_recipes")}}

@@ -4,7 +4,7 @@
 {% include 'select_checkboxes.html'%}
 
 <div class="container">
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center p-2">
         <div class="card form" style="width: 38rem;">
             <div class="card-body">
 
@@ -12,12 +12,9 @@
                 <h5 class="text-center mb-4">Fill out the form below to update your profile</h5>
 
                 <form action="/edit_profile" method="POST">
-
                     {{form.hidden_tag()}}
 
-
                     {% if form.username.errors %}
-
                     {{form.username.label(class_='label-font')}}
 
                     {% for error in form.username.errors %}
@@ -29,12 +26,10 @@
                     {% else %}
                     {{form.username.label(class_='label-font mt-2')}}
                     {{form.username(class_="form-control")}}
-
                     {% endif %}
 
 
                     {% if form.email.errors %}
-
                     {{form.email.label(class_='label-font')}}
 
                     {% for error in form.email.errors %}
@@ -46,7 +41,6 @@
                     {% else %}
                     {{form.email.label(class_='label-font mt-4')}}
                     {{form.email(class_="form-control")}}
-
                     {% endif %}
 
 
@@ -55,19 +49,16 @@
                         {{form.diet}}
                     </div>
 
-
                     {{form.intolerances.label(class_='label-font mt-4')}}
                     <div>
                         {{form.intolerances}}
                     </div>
-
 
                     {{form.exclude_ingredients.label(class='label-font mt-4')}}
                     {{form.exclude_ingredients(class_="form-control")}}
 
 
                     {% if form.password.errors %}
-
                     {{form.password.label(class_='label-font')}}
 
                     {% for error in form.password.errors%}
@@ -79,7 +70,6 @@
                     {% else %}
                     {{form.password.label(class_='label-font mt-4')}}
                     {{form.password(class_="form-control")}}
-
                     {% endif %}
 
                     <button class="btn btn-md btn-warning mt-4">Save Changes</button>
